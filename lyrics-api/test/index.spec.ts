@@ -5,7 +5,7 @@ import worker from '../src';
 describe('Hello World user worker', () => {
 	describe('request for /message', () => {
 		it('/ responds with "Hello, World!" (unit style)', async () => {
-			const request = new Request('http://example.com/message');
+			const request = new Request<unknown, IncomingRequestCfProperties>('http://example.com/message');
 			// Create an empty context to pass to `worker.fetch()`.
 			const ctx = createExecutionContext();
 			const response = await worker.fetch(request, env, ctx);
@@ -23,7 +23,7 @@ describe('Hello World user worker', () => {
 
 	describe('request for /random', () => {
 		it('/ responds with a random UUID (unit style)', async () => {
-			const request = new Request('http://example.com/random');
+			const request = new Request<unknown, IncomingRequestCfProperties>('http://example.com/random');
 			// Create an empty context to pass to `worker.fetch()`.
 			const ctx = createExecutionContext();
 			const response = await worker.fetch(request, env, ctx);
