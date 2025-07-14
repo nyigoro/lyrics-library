@@ -1,0 +1,8 @@
+name = "lyrics-api"
+compatibility_date = "2025-07-14"
+main = "src/index.ts"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lyrics_db"
+database_id = "e7b2ca7a-3e60-4a20-aa0f-549921b18e3f"

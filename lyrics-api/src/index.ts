@@ -12,15 +12,38 @@
  */
 
 export default {
-	async fetch(request, env, ctx): Promise<Response> {
-		const url = new URL(request.url);
-		switch (url.pathname) {
-			case '/message':
-				return new Response('Hello, World!');
-			case '/random':
-				return new Response(crypto.randomUUID());
-			default:
-				return new Response('Not Found', { status: 404 });
-		}
-	},
-} satisfies ExportedHandler<Env>;
+  async fetch(request: Request, env: any) {
+    const url = new URL(request.url);
+
+    if (request.method === "POST" && url.pathname === "/lyrics") {
+      const data = await request.json();
+      const { title, lyrics } = data;
+
+      if (!title || !lyrics) {
+        return new Response("Missing title or lyrics", { status: 400 });
+      }
+
+      await env.DB.prepare(`
+        CREATE TABLE IF NOT EXISTS lyrics (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          title TEXT,
+          content TEXT
+        );
+      `).run();
+
+      await env.DB.prepare(`
+        INSERT INTO lyrics (title, content) VALUES (?, ?);
+      `).bind(title, lyrics).run();
+
+      return new Response("✅ Saved", { status: 200 });
+    }
+
+    if (request.method === "GET" && url.pathname === "/lyrics") {
+      const { results } = await env.DB.prepare("SELECT * FROM lyrics").all();
+      return Response.json(results);
+    }
+
+    return new Response("Not found", { status: 404 });
+  },
+};
+
