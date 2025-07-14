@@ -1,4 +1,4 @@
-name = "lyrics-api"
+name = "lyrics"
 compatibility_date = "2025-07-14"
 main = "src/index.ts"
 
